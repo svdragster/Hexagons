@@ -8,14 +8,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import de.svdragster.hexagons.components.ComponentManager;
 import de.svdragster.hexagons.entities.EntityManager;
+import de.svdragster.hexagons.world.Engine;
 
 public class Hexagons extends ApplicationAdapter {
 
 
 	private static Hexagons instance;
 
-	private ComponentManager componentManager;
-	private EntityManager entityManager;
+    private Engine      WorldLogicEngine;
 
 	SpriteBatch batch;
 	Texture img;
@@ -23,8 +23,8 @@ public class Hexagons extends ApplicationAdapter {
 	public Hexagons() {
 		instance = this;
 
-		this.componentManager = new ComponentManager();
-		this.entityManager = new EntityManager();
+		this.WorldLogicEngine = new Engine();
+
 	}
 
 	@Override
@@ -48,15 +48,14 @@ public class Hexagons extends ApplicationAdapter {
 		img.dispose();
 	}
 
-	public ComponentManager getComponentManager() {
-		return componentManager;
-	}
 
-	public EntityManager getEntityManager() {
-		return entityManager;
-	}
 
 	public static Hexagons getInstance() {
 		return instance;
 	}
+
+    public Engine getWorldLogicEngine() {
+        return WorldLogicEngine;
+    }
+
 }

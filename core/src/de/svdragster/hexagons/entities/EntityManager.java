@@ -9,7 +9,6 @@ import java.util.Queue;
 
 import de.svdragster.hexagons.Hexagons;
 import de.svdragster.hexagons.components.Component;
-import de.svdragster.hexagons.components.ComponentMovement;
 import de.svdragster.hexagons.components.ComponentType;
 
 /**
@@ -18,13 +17,13 @@ import de.svdragster.hexagons.components.ComponentType;
 
 public class EntityManager {
 
-    private Map<Integer, List<Component>> entities;
+    private Map<Integer, List<Component>> entityContext;
 
     private int currentId = 0;
     private Queue<Integer> freeIds;
 
     public EntityManager() {
-        this.entities = new HashMap<Integer, List<Component>>();
+        this.entityContext = new HashMap<Integer, List<Component>>();
         this.freeIds = new LinkedList<Integer>();
     }
 
@@ -57,27 +56,52 @@ public class EntityManager {
         return id;
     }
 
+    public void removeEntity(int entity) {
+
+        for (Component c : this.entityContext.get(entity))
+            removeComponent(entity, c);
+        this.entityContext.remove(entity);
+        freeId(entity);
+    }
+
 
     public void addComponent(int entity, Component component){
-        Hexagons.getInstance().getComponentManager()
-                .getComponentList().get(ComponentType.MOVEMENT).add(new ComponentMovement());
-
-        if (hasComponents(entity, component.getType())) {
+        if (hasComponent(entity, component.getType())) {
             return;
         }
 
+        Hexagons.getInstance().getWorldLogicEngine()
+                .getComponentManager()
+                .getComponentList()
+                .get(component.getType())
+                .add(component);
+
         List<Component> list;
-        if (this.entities.containsKey(entity)) {
-            list = this.entities.get(entity);
+        if (this.entityContext.containsKey(entity)) {
+            list = this.entityContext.get(entity);
         } else {
             list = new ArrayList<Component>();
+            this.entityContext.put(entity, list);
         }
-        this.entities.put(entity, list);
         list.add(component);
     }
 
+    public void removeComponent(int entity, Component component) {
+        if (!hasComponent(entity, component.getType())) {
+            return;
+        }
+
+        Hexagons.getInstance().getWorldLogicEngine()
+                .getComponentManager()
+                .getComponentList()
+                .get(component.getType())
+                .remove(component);
+
+        this.entityContext.get(entity).remove(component);
+    }
+
     public boolean hasComponent(int entityId, ComponentType type) {
-        List<Component> components = this.entities.get(entityId);
+        List<Component> components = this.entityContext.get(entityId);
 
         for(Component c : components)
             if( c.getType() == type)
@@ -93,4 +117,7 @@ public class EntityManager {
         return true;
     }
 
+    public Map<Integer, List<Component>> getEntityContext() {
+        return entityContext;
+    }
 }
