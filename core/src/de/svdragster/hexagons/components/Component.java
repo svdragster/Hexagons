@@ -10,4 +10,8 @@ public abstract class Component {
     public ComponentType getType() {
         return type;
     }
+
+    public void setType(ComponentType type) {
+        this.type = type;
+    }
 }
