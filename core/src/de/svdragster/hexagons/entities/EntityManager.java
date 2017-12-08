@@ -43,7 +43,10 @@ public class EntityManager {
     }
 
     public int createEntity(){
-        return nextId();
+        int id = nextId();
+        //Creates new empty entity, necessary otherwise elsewhere we recieve NPE
+        entityContext.put(id,new ArrayList<Component>());
+        return id;
     }
 
     public int createEntity(Component... component){
