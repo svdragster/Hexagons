@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by z003p2yd on 08.12.2017.
+ * Created by Sven on 08.12.2017.
  */
 
 public class ComponentManager {

@@ -7,7 +7,7 @@ import de.svdragster.hexagons.Hexagons;
 import de.svdragster.hexagons.components.ComponentType;
 
 /**
- * Created by z003p2yd on 08.12.2017.
+ * Created by Sven on 08.12.2017.
  */
 
 public class SystemMovement extends System {
