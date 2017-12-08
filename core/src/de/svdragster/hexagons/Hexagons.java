@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import de.svdragster.hexagons.components.ComponentManager;
 import de.svdragster.hexagons.entities.EntityManager;
+import de.svdragster.hexagons.map.Hexagon;
+import de.svdragster.hexagons.map.TileLocation;
+import de.svdragster.hexagons.util.HexagonUtil;
 import de.svdragster.hexagons.world.Engine;
 
 public class Hexagons extends ApplicationAdapter {
@@ -31,6 +34,11 @@ public class Hexagons extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
+
+		// test
+        System.out.println(HexagonUtil.getTileLocation(0, 0));
+        System.out.println(HexagonUtil.getTileLocation(1, 0));
+        System.out.println(HexagonUtil.getTileLocation(2, 0));
 	}
 
 	@Override

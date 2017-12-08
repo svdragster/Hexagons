@@ -29,4 +29,12 @@ public class TileLocation {
     public void setY(double y) {
         this.y = y;
     }
+
+    @Override
+    public String toString() {
+        return "TileLocation{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
 }
