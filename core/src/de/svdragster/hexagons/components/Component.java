@@ -5,9 +5,9 @@ package de.svdragster.hexagons.components;
  */
 
 public abstract class Component {
-    private ComponentType[] types = null;
+    private ComponentType type;
 
-    public ComponentType[] getTypes() {
-        return types;
+    public ComponentType getType() {
+        return type;
     }
 }
