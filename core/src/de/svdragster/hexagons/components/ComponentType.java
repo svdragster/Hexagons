@@ -9,6 +9,11 @@ public enum ComponentType {
     POSITION,
     MOVEMENT,
     RENDER,
-    TARGET;
+    TARGET,
+    CONSUMER,
+    PRODUCER,
+    CONVERTER,
+    EXCHANGER
+    ;
 
 }
