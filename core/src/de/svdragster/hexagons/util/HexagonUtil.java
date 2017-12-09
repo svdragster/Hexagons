@@ -10,7 +10,7 @@ import de.svdragster.hexagons.map.TileLocation;
 
 public class HexagonUtil {
 
-    public static Hexagon hexagon = new Hexagon(90.5, 54);//62); // 79
+    public static Hexagon hexagon = new Hexagon(90.5, 54);
 
     /**
      * get the tiles location from the array indexes
@@ -21,14 +21,15 @@ public class HexagonUtil {
     public static TileLocation getTileLocation(int indexX, int indexY) {
         double x;
         double y;
-        if ((indexY & 1) == 1) {
+        if ((indexX & 1) == 1) {
             // if indexY is odd
-            x = (double) indexX * hexagon.getSideLengthX()*3 + hexagon.getSideLengthX()*1.5;
+            x = (double) indexX * hexagon.getSideLengthX()*1.5;
+            y = indexY * (hexagon.getSideLengthY()) * 2 + hexagon.getSideLengthY();
         } else {
             // if indexY is even
-            x = (double) indexX * hexagon.getSideLengthX() * 3;
+            x = (double) indexX * hexagon.getSideLengthX()*1.5;
+            y = indexY * (hexagon.getSideLengthY()) * 2;
         }
-        y = indexY * (hexagon.getSideLengthY());
         return new TileLocation(x, y);
     }
 
@@ -38,42 +39,47 @@ public class HexagonUtil {
      * @return
      */
     public static Point getArrayLocation(TileLocation tileLocation) {
-        /*int sectX = (int) (tileLocation.getX() / (2 * hexagon.getRadius()));
-        int sectY = (int) (tileLocation.getY() / (hexagon.getHeight() + hexagon.getSideLengthX()));
+        int sectX = (int) (tileLocation.getX() / (1.5 * hexagon.getSideLengthX()));
+        int sectY = (int) (tileLocation.getY() / (2 * hexagon.getSideLengthY()));
 
-        int sectPixelX = (int) (tileLocation.getX() % (2 * hexagon.getRadius()));
-        int sectPixelY = (int) (tileLocation.getY() % (hexagon.getHeight() + hexagon.getSideLengthX()));
+        int sectPixelX = (int) (tileLocation.getX() % (1.5 * hexagon.getSideLengthX()));
 
         Point point = new Point(sectX, sectY);
 
-        double gradient = hexagon.getHeight() / hexagon.getRadius();
+        double gradient = hexagon.getSideLengthY() / hexagon.getSideLengthX();
 
-        if ((sectY & 1) == 0) {
-            if (sectPixelY < (hexagon.getHeight() - sectPixelX * gradient)) {
-                // top left edge
+        if ((sectX & 1) == 0) {
+            int sectPixelY = (int) (tileLocation.getY() % (2 * hexagon.getSideLengthY()));
+            System.out.println(tileLocation.getX() + "///" + tileLocation.getY() + "    " + sectX + ", " + sectY + "; gradient: " + gradient + ", sx, sy " + sectPixelX + ", " + sectPixelY);
+            if (sectPixelY < (-sectPixelX + hexagon.getSideLengthY())) {
+                // bottom left edge
+                System.out.println("bottom left " + (-(sectPixelX + hexagon.getSideLengthY())));
                 point.setX(sectX - 1);
                 point.setY(sectY - 1);
-            } else if (sectPixelY < (- hexagon.getHeight() + sectPixelX * gradient)) {
-                // top right edge
-                point.setX(sectX);
-                point.setY(sectY - 1);
+            } else if (sectPixelY > (sectPixelX + hexagon.getSideLengthY())) {
+                // top left edge
+                System.out.println("top left " + ((sectPixelX + hexagon.getSideLengthY())));
+                point.setX(sectX - 1);
+                point.setY(sectY);
             }
             return point;
         }
-        if (sectPixelX >= hexagon.getRadius()
-                && sectPixelY < (2 * hexagon.getHeight() - sectPixelX * gradient)) {
-            // right side
+        int sectPixelY = (int) ((tileLocation.getY() + hexagon.getSideLengthY()) % (2 * hexagon.getSideLengthY()));
+        sectY = (int) ((tileLocation.getY() - hexagon.getSideLengthY()) / (2 * hexagon.getSideLengthY()));
+        System.out.println(tileLocation.getX() + "///" + tileLocation.getY() + "    " + sectX + ", " + sectY + "; gradient: " + gradient + ", sx, sy " + sectPixelX + ", " + sectPixelY);
+        point.setY(sectY);
+        if (sectPixelY < (-sectPixelX + hexagon.getSideLengthY())) {
+            // bottom left edge
+            System.out.println("bottom left " + (-(sectPixelX + hexagon.getSideLengthY())));
             point.setX(sectX - 1);
-            point.setY(sectY - 1);
-        } else {
-            // left side
-            if (sectPixelY < (sectPixelX * gradient)) {
-                point.setY(sectY - 1);
-            } else {
-                point.setX(sectX - 1);
-            }
-        }*/
-        return null;
+            point.setY(sectY);
+        } else if (sectPixelY > (sectPixelX + hexagon.getSideLengthY())) {
+            // top left edge
+            System.out.println("top left " + ((sectPixelX + hexagon.getSideLengthY())));
+            point.setX(sectX - 1);
+            point.setY(sectY + 1);
+        }
+        return point;
     }
 
 }
