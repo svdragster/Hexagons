@@ -25,15 +25,15 @@ public class Hexagons extends ApplicationAdapter {
 
 	public Hexagons() {
 		instance = this;
-
-		this.WorldLogicEngine = new Engine();
-
 	}
 
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
+
+
+		this.WorldLogicEngine = new Engine();
 
 		// test
         System.out.println(HexagonUtil.getTileLocation(0, 0));

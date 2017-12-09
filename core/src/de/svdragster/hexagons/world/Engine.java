@@ -31,6 +31,10 @@ public class Engine {
         return entityManager;
     }
 
+    public SystemManager getSystemManager() {
+        return systemManager;
+    }
+
     void run() {
         for(System s : systemManager)
             s.process( 0.0016);
