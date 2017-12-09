@@ -19,19 +19,16 @@ public class HexagonUtil {
      * @return
      */
     public static TileLocation getTileLocation(int indexX, int indexY) {
-        //double x = indexX * 2.0 * hexagon.getRadius() + (indexX & 1) * hexagon.getRadius(); // Adds radius if indexX is odd
-        //double y = indexY * (hexagon.getHeight() + hexagon.getSideLengthX());
         double x;
         double y;
         if ((indexY & 1) == 1) {
             // if indexY is odd
             x = (double) indexX * hexagon.getSideLengthX()*3 + hexagon.getSideLengthX()*1.5;
-            y = indexY * (hexagon.getSideLengthY()); // * (Math.sqrt(3)/2)
         } else {
             // if indexY is even
             x = (double) indexX * hexagon.getSideLengthX() * 3;
-            y = (double) indexY * (hexagon.getSideLengthY()); // * (Math.sqrt(3)/2)
         }
+        y = indexY * (hexagon.getSideLengthY());
         return new TileLocation(x, y);
     }
 
