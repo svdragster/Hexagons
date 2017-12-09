@@ -29,6 +29,9 @@ public class EntityManager {
         this.freeIds = new LinkedList<Integer>();
     }
 
+    /**
+     * @return returns the next free available ID components can associate against it.
+     */
     private int nextId() {
         if (freeIds.size() > 0) {
             return freeIds.poll();
@@ -40,16 +43,26 @@ public class EntityManager {
         return currentId;
     }
 
+
+    /**
+     * @param id reclaims the given entity ID.
+     */
     private void freeId(int id) {
         freeIds.offer(id);
     }
 
+    /**
+     * @return creates entity ID with an empty component context.
+     */
     public int createEntity(){
         int id =  nextId();
         entityContext.put(id,new ArrayList<Component>());
         return id;
     }
 
+    /**
+     * @return entity ID which has components associated with it
+     */
     public int createEntity(Component... component){
 
         int id = createEntity();
@@ -60,6 +73,9 @@ public class EntityManager {
         return id;
     }
 
+    /**
+     * @param entity reclaims the entity ID and frees the components
+     */
     public void removeEntity(int entity) {
 
         for (Component c : this.entityContext.get(entity))
@@ -69,6 +85,10 @@ public class EntityManager {
     }
 
 
+    /**
+     * @param entity
+     * @param component
+     */
     public void addComponent(int entity, Component component){
         if (hasComponent(entity, component.getType())) {
             return;
@@ -86,6 +106,10 @@ public class EntityManager {
         list.add(component);
     }
 
+    /**
+     * @param entity
+     * @param component
+     */
     public void removeComponent(int entity, Component component) {
         if (!hasComponent(entity, component.getType())) {
             return;
@@ -96,6 +120,11 @@ public class EntityManager {
         this.entityContext.get(entity).remove(component);
     }
 
+    /**
+     * @param entityId
+     * @param type
+     * @return true if an Entity has a certain component
+     */
     public boolean hasComponent(int entityId, ComponentType type) {
         List<Component> components = this.entityContext.get(entityId);
 
@@ -105,6 +134,11 @@ public class EntityManager {
         return false;
     }
 
+    /**
+     * @param entityId
+     * @param types
+     * @return true if an Entity has a certain set of components
+     */
     public boolean hasComponents(int entityId, ComponentType... types) {
 
             for(ComponentType t : types)
@@ -113,6 +147,11 @@ public class EntityManager {
         return true;
     }
 
+    /**
+     * @param entityID
+     * @param type
+     * @return the instance of a component requested via the type and is associated to the entityID
+     */
     public Component retrieveComponent(int entityID, ComponentType type){
         List<Component> entity = entityContext.get(entityID);
         for(Component c : entity)
@@ -121,7 +160,17 @@ public class EntityManager {
         return null;
     }
 
+    /**
+     * @return context of entities.
+     */
     public Map<Integer, List<Component>> getEntityContext() {
         return entityContext;
     }
+
+
+    /**
+     * @param entityID key to the associated components
+     * @return returns a list of components which define an entity
+     */
+    public  List<Component> getEntity(int entityID) { return entityContext.get(entityID);}
 }
