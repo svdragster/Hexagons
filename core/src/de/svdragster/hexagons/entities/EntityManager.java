@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import de.svdragster.hexagons.Hexagons;
 import de.svdragster.hexagons.components.Component;
+import de.svdragster.hexagons.components.ComponentManager;
 import de.svdragster.hexagons.components.ComponentType;
 
 /**
@@ -18,11 +18,13 @@ import de.svdragster.hexagons.components.ComponentType;
 public class EntityManager {
 
     private Map<Integer, List<Component>> entityContext;
+    private ComponentManager              ComponentStorage;
 
     private int currentId = 0;
     private Queue<Integer> freeIds;
 
-    public EntityManager() {
+    public EntityManager(ComponentManager componentStorage) {
+        this.ComponentStorage = componentStorage;
         this.entityContext = new HashMap<Integer, List<Component>>();
         this.freeIds = new LinkedList<Integer>();
     }
@@ -72,11 +74,7 @@ public class EntityManager {
             return;
         }
 
-        Hexagons.getInstance().getWorldLogicEngine()
-                .getComponentManager()
-                .getComponentList()
-                .get(component.getType())
-                .add(component);
+        ComponentStorage.emplaceComponent(component);
 
         List<Component> list;
         if (this.entityContext.containsKey(entity)) {
@@ -93,11 +91,7 @@ public class EntityManager {
             return;
         }
 
-        Hexagons.getInstance().getWorldLogicEngine()
-                .getComponentManager()
-                .getComponentList()
-                .get(component.getType())
-                .remove(component);
+        ComponentStorage.remove(component);
 
         this.entityContext.get(entity).remove(component);
     }

@@ -9,6 +9,11 @@ import de.svdragster.hexagons.system.SystemManager;
  * Created by Sven on 08.12.2017.
  */
 
+/**
+ * @brief Bundles all important parts of the ECS and gives an interface to the application to execute
+ * or expand the capabilities of this System. Only one instance should be every created per application
+ * but nothing forbids to create more.
+ */
 public class Engine {
 
     private ComponentManager componentManager;
@@ -18,7 +23,7 @@ public class Engine {
 
     public Engine(){
         this.componentManager = new ComponentManager();
-        this.entityManager = new EntityManager();
+        this.entityManager = new EntityManager(componentManager);
         this.systemManager = new SystemManager();
     }
 
