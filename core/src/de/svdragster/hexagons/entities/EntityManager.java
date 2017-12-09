@@ -84,7 +84,6 @@ public class EntityManager {
         freeId(entity);
     }
 
-
     /**
      * @param entity
      * @param component
@@ -166,7 +165,6 @@ public class EntityManager {
     public Map<Integer, List<Component>> getEntityContext() {
         return entityContext;
     }
-
 
     /**
      * @param entityID key to the associated components

@@ -26,22 +26,33 @@ public abstract class System  implements Observer {
     private EntityManager GlobalEntityContext;
     private boolean isActive=true;
 
+    /**
+     * @return
+     */
     public boolean isActive() {
         return isActive;
     }
 
+    /**
+     * @param active
+     */
     protected void setActive(boolean active) {
         isActive = active;
     }
 
+    /**
+     * @return
+     */
     public EntityManager getGlobalEntityContext() {
         return GlobalEntityContext;
     }
 
+    /**
+     * @param globalEntityContext
+     */
     public void setGlobalEntityContext(EntityManager globalEntityContext) {
         GlobalEntityContext = globalEntityContext;
     }
-
 
     /**
      * @brief The process-method is called every game tick. Any system is required to implement
