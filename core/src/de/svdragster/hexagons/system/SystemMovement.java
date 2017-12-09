@@ -33,8 +33,6 @@ public class SystemMovement extends System {
         }
     }
 
-
-
     @Override
     public void process(double delta) {
 
@@ -62,7 +60,8 @@ public class SystemMovement extends System {
     public void update(Observable observable, Object o) {
         if( o instanceof Integer){
             int entity = (Integer)o;
-           if( getGlobalEntityContext().hasComponents(entity,ComponentType.POSITION,ComponentType.MOVEMENT))
+
+            if( getGlobalEntityContext().hasComponents(entity,ComponentType.POSITION,ComponentType.MOVEMENT))
                idCache.add(entity);
         }
     }

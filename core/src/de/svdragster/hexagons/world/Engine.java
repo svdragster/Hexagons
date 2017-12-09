@@ -35,9 +35,10 @@ public class Engine {
         return systemManager;
     }
 
-    void run() {
+    public void run() {
         for(System s : systemManager)
-            s.process( 0.0016);
+            if(s.isActive())
+                s.process( 1);
     }
 
 }

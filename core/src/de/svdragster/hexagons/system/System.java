@@ -14,11 +14,33 @@ import de.svdragster.hexagons.entities.EntityManager;
  * c      certain kind of entities. Systems do not know about any entities directly they simply
  *        process components which are bundled together via an association. Any bundle of components
  *        are identified via an ID which describes unique entities.
+ *
+ *        Systems can be enabled and disabled. But the user is responsible for asking if thats the
+ *        case.
+ *
+ *
  */
 public abstract class System  implements Observer {
 
 
     private EntityManager GlobalEntityContext;
+    private boolean isActive=true;
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    protected void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public EntityManager getGlobalEntityContext() {
+        return GlobalEntityContext;
+    }
+
+    public void setGlobalEntityContext(EntityManager globalEntityContext) {
+        GlobalEntityContext = globalEntityContext;
+    }
 
 
     /**
@@ -27,7 +49,6 @@ public abstract class System  implements Observer {
      * @param delta is the time between two ticks the application needs to process everything
     */
     public abstract  void process( double delta );
-
 
     /**
      * @brief The subscribe method enables you get notified if something has changed so that
@@ -47,11 +68,11 @@ public abstract class System  implements Observer {
         Hexagons.getInstance().getWorldLogicEngine().getSystemManager().deleteObserver(this);
     }
 
-    public EntityManager getGlobalEntityContext() {
-        return GlobalEntityContext;
+    public void disableSystem(){
+        setActive(false);
     }
 
-    public void setGlobalEntityContext(EntityManager globalEntityContext) {
-        GlobalEntityContext = globalEntityContext;
+    public void enableSystem(){
+        setActive(true);
     }
 }

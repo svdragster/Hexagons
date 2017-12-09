@@ -9,6 +9,14 @@ import java.util.Observable;
  * Created by Sven on 08.12.2017.
  */
 
+/**
+ * @brief The SystemManager is responsible for keeping track of all available systems. It inherit
+ *        the Observable class so that systems which have implemented the Observer Interface can
+ *        be notified by the SystemManager.
+ *
+ *        Different Systems expect different Notification Objects, these objects are specified by
+ *        each system them self.
+ */
 public class SystemManager extends Observable implements Iterable<System> {
 
     private List<System> SystemPool;
@@ -27,7 +35,7 @@ public class SystemManager extends Observable implements Iterable<System> {
                 SystemPool.remove(system);
     }
 
-    public void NotifySystems(Object arg){
+    public void BroadcastMessage(Object arg){
         setChanged();
         notifyObservers(arg);
     }

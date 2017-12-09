@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.svdragster.hexagons.components.ComponentMovement;
 import de.svdragster.hexagons.components.ComponentPosition;
 import de.svdragster.hexagons.components.ComponentType;
-import de.svdragster.hexagons.system.System;
 import de.svdragster.hexagons.system.SystemMovement;
 import de.svdragster.hexagons.world.Engine;
 
@@ -42,9 +41,9 @@ public class Hexagons extends ApplicationAdapter {
 		WorldLogicEngine.getEntityManager().createEntity(new ComponentPosition(50,150),new ComponentMovement(3,1.5));
 		WorldLogicEngine.getEntityManager().createEntity(new ComponentPosition(0,50),new ComponentMovement(4,2));
 
-		WorldLogicEngine.getSystemManager().NotifySystems(1);
-		WorldLogicEngine.getSystemManager().NotifySystems(2);
-		WorldLogicEngine.getSystemManager().NotifySystems(3);
+		WorldLogicEngine.getSystemManager().BroadcastMessage(1);
+		WorldLogicEngine.getSystemManager().BroadcastMessage(2);
+		WorldLogicEngine.getSystemManager().BroadcastMessage(3);
 
 
 		// test
@@ -56,10 +55,7 @@ public class Hexagons extends ApplicationAdapter {
 	@Override
 	public void render () {
 
-		for(System system: WorldLogicEngine.getSystemManager()){
-
-			system.process(1);
-		}
+		WorldLogicEngine.run();
 
 
 		//should be handled by a system but for ease i put it bluntly here.
