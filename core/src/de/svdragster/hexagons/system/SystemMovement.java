@@ -3,11 +3,11 @@ package de.svdragster.hexagons.system;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
-import java.util.Observer;
 
 import de.svdragster.hexagons.Hexagons;
+import de.svdragster.hexagons.components.ComponentMovement;
+import de.svdragster.hexagons.components.ComponentPosition;
 import de.svdragster.hexagons.components.ComponentType;
-import de.svdragster.hexagons.entities.EntityManager;
 
 /**
  * Created by Sven on 08.12.2017.
@@ -16,10 +16,14 @@ import de.svdragster.hexagons.entities.EntityManager;
 public class SystemMovement extends System {
 
     private List<Integer> idCache;
+    private int width,height;
 
-    public SystemMovement() {
+    public SystemMovement(int width,int height) {
         super.setGlobalEntityContext(Hexagons.getInstance().getWorldLogicEngine().getEntityManager());
         super.subscribe();
+
+        this.width = width;
+        this.height = height;
         idCache = new ArrayList<Integer>();
 
         //Caching already existing entities in locally
@@ -33,6 +37,24 @@ public class SystemMovement extends System {
 
     @Override
     public void process(double delta) {
+
+        for(int entity : idCache){
+
+            ComponentPosition position = (ComponentPosition) getGlobalEntityContext().retrieveComponent(entity,ComponentType.POSITION);
+            ComponentMovement movement = (ComponentMovement) getGlobalEntityContext().retrieveComponent(entity,ComponentType.MOVEMENT);
+
+           if(position.X < 0)
+               movement.dX *= -1;
+           if(position.X > width)
+               movement.dX *= -1;
+            if(position.Y < 0)
+                movement.dY *= -1;
+            if(position.Y > height)
+                movement.dY *= -1;
+
+            position.X += movement.dX * delta;
+            position.Y += movement.dY * delta;
+        }
 
     }
 

@@ -6,6 +6,13 @@ package de.svdragster.hexagons.components;
 
 public class ComponentPosition extends Component {
 
+    public double X;
+    public double Y;
 
+    public ComponentPosition(double x, double y){
+        super.setType(ComponentType.POSITION);
+        X = x;
+        Y = y;
+    }
 
 }

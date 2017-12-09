@@ -43,7 +43,9 @@ public class EntityManager {
     }
 
     public int createEntity(){
-        return nextId();
+        int id =  nextId();
+        entityContext.put(id,new ArrayList<Component>());
+        return id;
     }
 
     public int createEntity(Component... component){
@@ -115,6 +117,14 @@ public class EntityManager {
                 if(!hasComponent(entityId, t))
                     return false;
         return true;
+    }
+
+    public Component retrieveComponent(int entityID, ComponentType type){
+        List<Component> entity = entityContext.get(entityID);
+        for(Component c : entity)
+            if(c.getType() == type)
+                return c;
+        return null;
     }
 
     public Map<Integer, List<Component>> getEntityContext() {

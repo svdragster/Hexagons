@@ -5,6 +5,10 @@ package de.svdragster.hexagons.components;
  */
 
 public abstract class Component {
+    public void setType(ComponentType type) {
+        this.type = type;
+    }
+
     private ComponentType type;
 
     public ComponentType getType() {

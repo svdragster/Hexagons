@@ -4,7 +4,6 @@ import java.util.Observer;
 
 import de.svdragster.hexagons.Hexagons;
 import de.svdragster.hexagons.entities.EntityManager;
-import de.svdragster.hexagons.map.Hexagon;
 
 /**
  * Created by Sven on 08.12.2017.
@@ -18,7 +17,7 @@ public abstract class System  implements Observer {
 
     public abstract  void process( double delta );
 
-    public void subscribe(){
+    protected void subscribe(){
         Hexagons.getInstance().getWorldLogicEngine().getSystemManager().addObserver(this);
     }
 
