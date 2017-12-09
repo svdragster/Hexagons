@@ -1,19 +1,9 @@
 package de.svdragster.hexagons.system;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Observable;
-import java.util.Observer;
-import java.util.Queue;
-import java.util.function.Consumer;
-
-import de.svdragster.hexagons.Hexagons;
-import de.svdragster.hexagons.components.Component;
-import de.svdragster.hexagons.components.ComponentType;
 
 /**
  * Created by Sven on 08.12.2017.
@@ -35,6 +25,11 @@ public class SystemManager extends Observable implements Iterable<System> {
     public void removeSystem(System system) {
             if(!SystemPool.contains(system))
                 SystemPool.remove(system);
+    }
+
+    public void NotifySystems(Object arg){
+        setChanged();
+        notifyObservers(arg);
     }
 
 

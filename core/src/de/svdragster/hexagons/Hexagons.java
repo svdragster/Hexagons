@@ -34,9 +34,18 @@ public class Hexagons extends ApplicationAdapter {
 
 
 		this.WorldLogicEngine = new Engine();
-		WorldLogicEngine.getEntityManager().createEntity(new ComponentPosition(100,100),new ComponentMovement(1,0.7));
 
-		WorldLogicEngine.getSystemManager().addSystem(new SystemMovement(300,300));
+
+		WorldLogicEngine.getSystemManager().addSystem(new SystemMovement(400,300));
+
+		WorldLogicEngine.getEntityManager().createEntity(new ComponentPosition(100,100),new ComponentMovement(1,0.7));
+		WorldLogicEngine.getEntityManager().createEntity(new ComponentPosition(50,150),new ComponentMovement(3,1.5));
+		WorldLogicEngine.getEntityManager().createEntity(new ComponentPosition(0,50),new ComponentMovement(4,2));
+
+		WorldLogicEngine.getSystemManager().NotifySystems(1);
+		WorldLogicEngine.getSystemManager().NotifySystems(2);
+		WorldLogicEngine.getSystemManager().NotifySystems(3);
+
 
 		// test
         //System.out.println(HexagonUtil.getTileLocation(0, 0));
@@ -47,16 +56,23 @@ public class Hexagons extends ApplicationAdapter {
 	@Override
 	public void render () {
 
-		for(System system: WorldLogicEngine.getSystemManager())
+		for(System system: WorldLogicEngine.getSystemManager()){
+
 			system.process(1);
+		}
+
 
 		//should be handled by a system but for ease i put it bluntly here.
 		ComponentPosition position = (ComponentPosition) WorldLogicEngine.getEntityManager().retrieveComponent(1,ComponentType.POSITION);
+		ComponentPosition position2 = (ComponentPosition) WorldLogicEngine.getEntityManager().retrieveComponent(2,ComponentType.POSITION);
+		ComponentPosition position3 = (ComponentPosition) WorldLogicEngine.getEntityManager().retrieveComponent(3,ComponentType.POSITION);
 
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		batch.draw(img, (int)position.X, (int)position.Y);
+		batch.draw(img, (int)position2.X, (int)position2.Y);
+		batch.draw(img, (int)position3.X, (int)position3.Y);
 		batch.end();
 	}
 	
