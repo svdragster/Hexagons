@@ -6,40 +6,36 @@ package de.svdragster.hexagons.map;
 
 public class Hexagon {
 
-    private double radius;
-    private double sideLength;
-    private double height;
+    /*
 
-    public Hexagon(double sideLength) {
-        this.sideLength = sideLength;
 
-        this.sideLength = sideLength;
 
-        this.radius = Math.cos(30) * sideLength;
-        this.height = Math.sin(30) * sideLength;
+
+
+
+     */
+
+    private double sideLengthX;
+    private double sideLengthY;
+
+    public Hexagon(double sideLengthX, double sideLengthY) {
+        this.sideLengthX = sideLengthX;
+        this.sideLengthY = sideLengthY;
     }
 
-    public double getRadius() {
-        return radius;
+    public double getSideLengthX() {
+        return sideLengthX;
     }
 
-    public void setRadius(double radius) {
-        this.radius = radius;
+    public void setSideLengthX(double sideLengthX) {
+        this.sideLengthX = sideLengthX;
     }
 
-    public double getSideLength() {
-        return sideLength;
+    public double getSideLengthY() {
+        return sideLengthY;
     }
 
-    public void setSideLength(double sideLength) {
-        this.sideLength = sideLength;
-    }
-
-    public double getHeight() {
-        return height;
-    }
-
-    public void setHeight(double height) {
-        this.height = height;
+    public void setSideLengthY(double sideLengthY) {
+        this.sideLengthY = sideLengthY;
     }
 }
