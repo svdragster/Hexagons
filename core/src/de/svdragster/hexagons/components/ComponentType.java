@@ -13,7 +13,8 @@ public enum ComponentType {
     CONSUMER,
     PRODUCER,
     CONVERTER,
-    EXCHANGER
+    EXCHANGER,
+    MESSAGE,
     ;
 
 }
