@@ -160,6 +160,17 @@ public class EntityManager {
     }
 
     /**
+     * @param entityID
+     * @return
+     */
+    public boolean isEntityAlive(int entityID){
+        for(int id : this.entityContext.keySet())
+            if(id==entityID)
+                return true;
+        return false;
+    }
+
+    /**
      * @return context of entities.
      */
     public Map<Integer, List<Component>> getEntityContext() {

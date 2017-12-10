@@ -72,8 +72,10 @@ public class Hexagons extends ApplicationAdapter {
 		if(!msg.Inbox.isEmpty())
 			msg.Inbox.poll().InvokeCallback();
 
-		if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT)){
-			ComponentMailbox.Message  SpeedUp = new ComponentMailbox.Message(1, 1, "", new Delegate() {
+		if(Gdx.input.isKeyPressed(Input.Keys.LEFT))
+		{
+			ComponentMailbox.Message  SpeedUp = new ComponentMailbox.Message(1, 1, "", new Delegate()
+			{
 				@Override
 				public void invoke(Object... args) {
 					ComponentMovement speed = (ComponentMovement) WorldLogicEngine.getEntityManager().retrieveComponent(1,ComponentType.MOVEMENT);
@@ -81,13 +83,19 @@ public class Hexagons extends ApplicationAdapter {
 						speed.dX--;
 					else
 						speed.dX++;
+
+					if(speed.dY < 0)
+						speed.dY--;
+					else
+						speed.dY++;
 				}
 			});
 
 			WorldLogicEngine.getSystemManager().BroadcastMessage(SpeedUp);
 		}
 
-		if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)){
+		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT))
+		{
 			ComponentMailbox.Message  SpeedUp = new ComponentMailbox.Message(1, 1, "", new Delegate() {
 				@Override
 				public void invoke(Object... args) {
@@ -96,6 +104,11 @@ public class Hexagons extends ApplicationAdapter {
 						speed.dX++;
 					else
 						speed.dX--;
+
+					if(speed.dY < 0)
+						speed.dY++;
+					else
+						speed.dY--;
 				}
 			});
 
