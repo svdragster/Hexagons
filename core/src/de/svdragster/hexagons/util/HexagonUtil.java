@@ -50,15 +50,12 @@ public class HexagonUtil {
 
         if ((sectX & 1) == 0) {
             int sectPixelY = (int) (tileLocation.getY() % (2 * hexagon.getSideLengthY()));
-            System.out.println(tileLocation.getX() + "///" + tileLocation.getY() + "    " + sectX + ", " + sectY + "; gradient: " + gradient + ", sx, sy " + sectPixelX + ", " + sectPixelY);
             if (sectPixelY < (-sectPixelX + hexagon.getSideLengthY())) {
                 // bottom left edge
-                System.out.println("bottom left " + (-(sectPixelX + hexagon.getSideLengthY())));
                 point.setX(sectX - 1);
                 point.setY(sectY - 1);
             } else if (sectPixelY > (sectPixelX + hexagon.getSideLengthY())) {
                 // top left edge
-                System.out.println("top left " + ((sectPixelX + hexagon.getSideLengthY())));
                 point.setX(sectX - 1);
                 point.setY(sectY);
             }
@@ -66,16 +63,13 @@ public class HexagonUtil {
         }
         int sectPixelY = (int) ((tileLocation.getY() + hexagon.getSideLengthY()) % (2 * hexagon.getSideLengthY()));
         sectY = (int) ((tileLocation.getY() - hexagon.getSideLengthY()) / (2 * hexagon.getSideLengthY()));
-        System.out.println(tileLocation.getX() + "///" + tileLocation.getY() + "    " + sectX + ", " + sectY + "; gradient: " + gradient + ", sx, sy " + sectPixelX + ", " + sectPixelY);
         point.setY(sectY);
         if (sectPixelY < (-sectPixelX + hexagon.getSideLengthY())) {
             // bottom left edge
-            System.out.println("bottom left " + (-(sectPixelX + hexagon.getSideLengthY())));
             point.setX(sectX - 1);
             point.setY(sectY);
         } else if (sectPixelY > (sectPixelX + hexagon.getSideLengthY())) {
             // top left edge
-            System.out.println("top left " + ((sectPixelX + hexagon.getSideLengthY())));
             point.setX(sectX - 1);
             point.setY(sectY + 1);
         }
