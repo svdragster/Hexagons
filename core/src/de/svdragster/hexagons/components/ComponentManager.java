@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by Sven on 08.12.2017.
@@ -42,6 +43,8 @@ public class ComponentManager {
         return componentList.get(component.getType()).remove(component);
     }
 
+
+
     /**
      * @param type of the component which shall be eliminated from the ECS
      * @return a List of all instances of that type which were removed
@@ -52,5 +55,14 @@ public class ComponentManager {
 
     public int queryAmount(ComponentType type) {
         return componentList.get(type).size();
+    }
+    public Component queryComponent(UUID ID){
+        for( List<Component> types : componentList.values()){
+            for(Component component : types){
+                if (component.getID().equals(ID))
+                    return component;
+            }
+        }
+        return null;
     }
 }

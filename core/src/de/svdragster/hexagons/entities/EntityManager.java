@@ -17,8 +17,6 @@ import de.svdragster.hexagons.components.ComponentType;
  */
 
 public class EntityManager {
-
-    private Map<Integer, List<Component>>   entityContext;
     private Map<Integer, List<UUID>>        EntityContext;
     private ComponentManager                ComponentStorage;
 
@@ -27,7 +25,7 @@ public class EntityManager {
 
     public EntityManager(ComponentManager componentStorage) {
         this.ComponentStorage = componentStorage;
-        this.entityContext = new HashMap<Integer, List<Component>>();
+        this.EntityContext = new HashMap<Integer, List<UUID>>();
         this.freeIds = new LinkedList<Integer>();
     }
 
@@ -58,7 +56,7 @@ public class EntityManager {
      */
     public int createEntity(){
         int id =  nextId();
-        entityContext.put(id,new ArrayList<Component>());
+        EntityContext.put(id,new ArrayList<UUID>());
         return id;
     }
 
@@ -83,7 +81,7 @@ public class EntityManager {
         if(isEntityAlive(entity))
         {
             List<Component> e = getEntity(entity);
-            this.entityContext.remove(entity);
+            this.EntityContext.remove(entity);
 
             if(e != null)
                 for (Component c : e)
@@ -105,14 +103,14 @@ public class EntityManager {
 
         ComponentStorage.emplaceComponent(component);
 
-        List<Component> list; // Create List Reference Holder
-        if (this.entityContext.containsKey(entity)) {
-            list = this.entityContext.get(entity); //Fill Holder with existing Reference
+        List<UUID> list; // Create List Reference Holder
+        if (this.EntityContext.containsKey(entity)) {
+            list = this.EntityContext.get(entity); //Fill Holder with existing Reference
         } else {
-            list = new ArrayList<Component>();
-            this.entityContext.put(entity, list); // Create new Reference Holder
+            list = new ArrayList<>();
+            this.EntityContext.put(entity, list); // Create new Reference Holder
         }
-        list.add(component);
+        list.add(component.getID());
     }
 
     /**
@@ -126,7 +124,7 @@ public class EntityManager {
 
         ComponentStorage.remove(component);
 
-        this.entityContext.get(entity).remove(component);
+        this.EntityContext.get(entity).remove(component.getType());
     }
 
     /**
@@ -135,7 +133,7 @@ public class EntityManager {
      * @return true if an Entity has a certain component
      */
     public boolean hasComponent(int entityId, ComponentType type) {
-        List<Component> components = this.entityContext.get(entityId);
+        List<Component> components = getEntity(entityId);
 
         for(Component c : components)
             if( c.getType() == type)
@@ -162,20 +160,19 @@ public class EntityManager {
      * @return the instance of a component requested via the type and is associated to the entityID
      */
     public Component retrieveComponent(int entityID, ComponentType type){
-        List<Component> entity = entityContext.get(entityID);
-        if(entity != null)
-            for(Component c : entity)
-                if(c != null && c.getType() == type)
-                    return c;
+        if(isEntityAlive(entityID)){
+            List<Component> entity = getEntity(entityID);
+            if(entity != null)
+                for(Component c : entity)
+                    if(c != null && c.getType() == type)
+                        return c;
+            return null;
+        }
         return null;
     }
 
-    /**
-     * @param entityID
-     * @return
-     */
     public boolean isEntityAlive(int entityID){
-        for(int id : this.entityContext.keySet())
+        for(int id : this.EntityContext.keySet())
             if(id==entityID)
                 return true;
         return false;
@@ -184,13 +181,19 @@ public class EntityManager {
     /**
      * @return context of entities.
      */
-    public Map<Integer, List<Component>> getEntityContext() {
-        return entityContext;
+    public Map<Integer, List<UUID>> getEntityContext() {
+        return EntityContext;
     }
 
     /**
      * @param entityID key to the associated components
      * @return returns a list of components which define an entity
      */
-    public  List<Component> getEntity(int entityID) { return entityContext.get(entityID);}
+    public  List<Component> getEntity(int entityID) {
+        List<Component> Entity = new ArrayList<>();
+        for(UUID id : EntityContext.get(entityID)){
+            Entity.add(ComponentStorage.queryComponent(id));
+        }
+        return Entity;
+    }
 }
