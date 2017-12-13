@@ -50,6 +50,8 @@ public class SystemMessageDelivery extends System {
         for(int entity : getGlobalEntityContext().getEntityContext().keySet()){
             if(getGlobalEntityContext().hasComponent(entity, ComponentType.MESSAGE)){ //An entity has a mailbox so we are going to retrieve it
                 ComponentMailbox box = (ComponentMailbox) getGlobalEntityContext().retrieveComponent(entity,ComponentType.MESSAGE);
+                if(box == null)
+                    continue;
                 //Check if there any messages left to be delivered to another entity
                 if(box.hasOutGoingMail()) {
                    while(!box.Outbox.isEmpty()) {

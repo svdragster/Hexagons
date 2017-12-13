@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.UUID;
 
 import de.svdragster.hexagons.components.Component;
 import de.svdragster.hexagons.components.ComponentManager;
@@ -17,8 +18,9 @@ import de.svdragster.hexagons.components.ComponentType;
 
 public class EntityManager {
 
-    private Map<Integer, List<Component>> entityContext;
-    private ComponentManager              ComponentStorage;
+    private Map<Integer, List<Component>>   entityContext;
+    private Map<Integer, List<UUID>>        EntityContext;
+    private ComponentManager                ComponentStorage;
 
     private int currentId = 0;
     private Queue<Integer> freeIds;
@@ -78,10 +80,18 @@ public class EntityManager {
      */
     public void removeEntity(int entity) {
 
-        for (Component c : this.entityContext.get(entity))
-            removeComponent(entity, c);
-        this.entityContext.remove(entity);
-        freeId(entity);
+        if(isEntityAlive(entity))
+        {
+            List<Component> e = getEntity(entity);
+            this.entityContext.remove(entity);
+
+            if(e != null)
+                for (Component c : e)
+                    ComponentStorage.remove(c);
+
+            freeId(entity);
+        }
+
     }
 
     /**
@@ -95,12 +105,12 @@ public class EntityManager {
 
         ComponentStorage.emplaceComponent(component);
 
-        List<Component> list;
+        List<Component> list; // Create List Reference Holder
         if (this.entityContext.containsKey(entity)) {
-            list = this.entityContext.get(entity);
+            list = this.entityContext.get(entity); //Fill Holder with existing Reference
         } else {
             list = new ArrayList<Component>();
-            this.entityContext.put(entity, list);
+            this.entityContext.put(entity, list); // Create new Reference Holder
         }
         list.add(component);
     }
@@ -153,9 +163,10 @@ public class EntityManager {
      */
     public Component retrieveComponent(int entityID, ComponentType type){
         List<Component> entity = entityContext.get(entityID);
-        for(Component c : entity)
-            if(c.getType() == type)
-                return c;
+        if(entity != null)
+            for(Component c : entity)
+                if(c != null && c.getType() == type)
+                    return c;
         return null;
     }
 

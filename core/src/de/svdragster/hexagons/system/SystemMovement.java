@@ -38,20 +38,23 @@ public class SystemMovement extends System {
 
         for(int entity : idCache){
 
-            ComponentPosition position = (ComponentPosition) getGlobalEntityContext().retrieveComponent(entity,ComponentType.POSITION);
-            ComponentMovement movement = (ComponentMovement) getGlobalEntityContext().retrieveComponent(entity,ComponentType.MOVEMENT);
+            if(getGlobalEntityContext().isEntityAlive(entity)){
+                ComponentPosition position = (ComponentPosition) getGlobalEntityContext().retrieveComponent(entity,ComponentType.POSITION);
+                ComponentMovement movement = (ComponentMovement) getGlobalEntityContext().retrieveComponent(entity,ComponentType.MOVEMENT);
 
-           if(position.X < 0)
-               movement.dX *= -1;
-           if(position.X > width)
-               movement.dX *= -1;
-            if(position.Y < 0)
-                movement.dY *= -1;
-            if(position.Y > height)
-                movement.dY *= -1;
+                if(position.X < 0)
+                    movement.dX *= -1;
+                if(position.X > width)
+                    movement.dX *= -1;
+                if(position.Y < 0)
+                    movement.dY *= -1;
+                if(position.Y > height)
+                    movement.dY *= -1;
 
-            position.X += movement.dX * delta;
-            position.Y += movement.dY * delta;
+                position.X += movement.dX * delta;
+                position.Y += movement.dY * delta;
+            }
+
         }
 
     }

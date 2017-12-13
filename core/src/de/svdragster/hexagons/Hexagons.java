@@ -6,6 +6,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+
+import java.util.Random;
 
 import de.svdragster.hexagons.components.ComponentMailbox;
 import de.svdragster.hexagons.components.ComponentMovement;
@@ -17,14 +20,13 @@ import de.svdragster.hexagons.util.Delegate;
 import de.svdragster.hexagons.world.Engine;
 
 public class Hexagons extends ApplicationAdapter {
-
-
 	private static Hexagons instance;
-
     private Engine      WorldLogicEngine;
+
 
 	SpriteBatch batch;
 	Texture img;
+	ShapeRenderer 	render;
 
 	public Hexagons() {
 		instance = this;
@@ -34,6 +36,9 @@ public class Hexagons extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
+		render = new ShapeRenderer();
+
+		//render.setProjectionMatrix();
 
 
 		this.WorldLogicEngine = new Engine();
@@ -43,13 +48,7 @@ public class Hexagons extends ApplicationAdapter {
 		WorldLogicEngine.getSystemManager().addSystem(new SystemMessageDelivery(WorldLogicEngine.getEntityManager()));
 
 
-		WorldLogicEngine.getEntityManager().createEntity(new ComponentPosition(100,100),new ComponentMovement(1,0.7),new ComponentMailbox());
-		WorldLogicEngine.getEntityManager().createEntity(new ComponentPosition(50,150),new ComponentMovement(3,1.5));
-		WorldLogicEngine.getEntityManager().createEntity(new ComponentPosition(0,50),new ComponentMovement(4,2));
 
-		WorldLogicEngine.getSystemManager().BroadcastMessage(1);
-		WorldLogicEngine.getSystemManager().BroadcastMessage(2);
-		WorldLogicEngine.getSystemManager().BroadcastMessage(3);
 
 
 		// test
@@ -58,70 +57,102 @@ public class Hexagons extends ApplicationAdapter {
         //System.out.println(HexagonUtil.getTileLocation(2, 0));
 	}
 
+	public int id = -1;
+
 	@Override
 	public void render () {
 
-		WorldLogicEngine.run();
 
-		//should be handled by a system but for ease i put it bluntly here.
-		ComponentPosition position = (ComponentPosition) WorldLogicEngine.getEntityManager().retrieveComponent(1,ComponentType.POSITION);
-		ComponentPosition position2 = (ComponentPosition) WorldLogicEngine.getEntityManager().retrieveComponent(2,ComponentType.POSITION);
-		ComponentPosition position3 = (ComponentPosition) WorldLogicEngine.getEntityManager().retrieveComponent(3,ComponentType.POSITION);
+		id = WorldLogicEngine.getEntityManager().getEntityContext().size();
 
-		ComponentMailbox msg = (ComponentMailbox) WorldLogicEngine.getEntityManager().retrieveComponent(1,ComponentType.MESSAGE);
-		if(!msg.Inbox.isEmpty())
+		ComponentMailbox msg = null;
+		if(id > 0)
+			msg = (ComponentMailbox) WorldLogicEngine.getEntityManager().retrieveComponent(id,ComponentType.MESSAGE);
+		if(msg != null && !msg.Inbox.isEmpty())
 			msg.Inbox.poll().InvokeCallback();
 
-		if(Gdx.input.isKeyPressed(Input.Keys.LEFT))
+		if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+			Random rn = new Random();
+			 id = WorldLogicEngine.getEntityManager().createEntity(
+					new ComponentPosition(rn.nextInt(400),rn.nextInt(300)),
+					new ComponentMovement(1+rn.nextInt(9),1+rn.nextInt(9)),
+					new ComponentMailbox());
+
+			WorldLogicEngine.getSystemManager().BroadcastMessage(id);
+		}
+
+		if(Gdx.input.isKeyPressed(Input.Keys.R)){
+			if(id > 0)
+				WorldLogicEngine.getEntityManager().removeEntity(id);
+		}
+
+		if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT))
 		{
-			ComponentMailbox.Message  SpeedUp = new ComponentMailbox.Message(1, 1, "", new Delegate()
+			ComponentMailbox.Message  SpeedUp = new ComponentMailbox.Message(id, id, "", new Delegate()
 			{
 				@Override
 				public void invoke(Object... args) {
-					ComponentMovement speed = (ComponentMovement) WorldLogicEngine.getEntityManager().retrieveComponent(1,ComponentType.MOVEMENT);
+					ComponentMovement speed = (ComponentMovement) WorldLogicEngine.getEntityManager().retrieveComponent(id,ComponentType.MOVEMENT);
 					if(speed.dX < 0)
-						speed.dX--;
+						speed.dX -= 1.1;
 					else
-						speed.dX++;
+						speed.dX += 1.1;
 
 					if(speed.dY < 0)
-						speed.dY--;
+						speed.dY -= 1.1;
 					else
-						speed.dY++;
+						speed.dY += 1.1;
 				}
 			});
 
 			WorldLogicEngine.getSystemManager().BroadcastMessage(SpeedUp);
 		}
 
-		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT))
+		if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT))
 		{
-			ComponentMailbox.Message  SpeedUp = new ComponentMailbox.Message(1, 1, "", new Delegate() {
+			ComponentMailbox.Message  SpeedUp = new ComponentMailbox.Message(id, id, "", new Delegate()
+			{
 				@Override
 				public void invoke(Object... args) {
-					ComponentMovement speed = (ComponentMovement) WorldLogicEngine.getEntityManager().retrieveComponent(1,ComponentType.MOVEMENT);
+					ComponentMovement speed = (ComponentMovement) WorldLogicEngine.getEntityManager().retrieveComponent(id,ComponentType.MOVEMENT);
 					if(speed.dX < 0)
-						speed.dX++;
+						speed.dX += 1.1;
 					else
-						speed.dX--;
+						speed.dX -= 1.1;
 
 					if(speed.dY < 0)
-						speed.dY++;
+						speed.dY += 1.1;
 					else
-						speed.dY--;
+						speed.dY -= 1.1;
 				}
 			});
 
 			WorldLogicEngine.getSystemManager().BroadcastMessage(SpeedUp);
 		}
+
+		WorldLogicEngine.run();
 
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		batch.draw(img, (int)position.X, (int)position.Y);
-		batch.draw(img, (int)position2.X, (int)position2.Y);
-		batch.draw(img, (int)position3.X, (int)position3.Y);
+
+		for(int entity : WorldLogicEngine.getEntityManager().getEntityContext().keySet()){
+
+
+			ComponentPosition pos = (ComponentPosition) WorldLogicEngine.getEntityManager().retrieveComponent(entity,ComponentType.POSITION);
+			//batch.draw(img, (int)pos.X, (int)pos.Y);
+			render.begin(ShapeRenderer.ShapeType.Line);
+
+			Random rn = new Random();
+			render.setColor(rn.nextInt(255)/2, rn.nextInt(255), rn.nextInt(255), 1);
+			render.rect((float)pos.X, (float)pos.Y,10,10);
+
+			render.flush();
+			render.end();
+		}
+
 		batch.end();
+		System.out.println("FPS: "+Gdx.app.getGraphics().getFramesPerSecond()+ " Entity Count: " + id);
 	}
 	
 	@Override
