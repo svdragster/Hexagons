@@ -7,7 +7,12 @@ package de.svdragster.hexagons.screens;
 public class ScreenMainMenu extends HexagonScreen {
 
     public ScreenMainMenu() {
-        super(ScreenType.LOADING);
+        super(ScreenType.MAIN_MENU);
+    }
+
+    @Override
+    public void create() {
+
     }
 
     @Override

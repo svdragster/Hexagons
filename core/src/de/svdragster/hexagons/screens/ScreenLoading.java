@@ -1,6 +1,11 @@
 package de.svdragster.hexagons.screens;
 
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+import de.svdragster.hexagons.Hexagons;
 
 /**
  * Created by Sven on 14.12.2017.
@@ -8,8 +13,38 @@ import com.badlogic.gdx.Screen;
 
 public class ScreenLoading extends HexagonScreen {
 
+    public static float loadedIndividual = 0;
+
+    private SpriteBatch batch;
+    private Texture img;
+    private BitmapFont font;
+    private float loaded = 0;
+    private String currentlyLoading = "";
+
+
     public ScreenLoading() {
         super(ScreenType.LOADING);
+    }
+
+    @Override
+    public void create() {
+        batch = new SpriteBatch();
+        font = new BitmapFont();
+
+        new Thread(() -> {
+            int i=0;
+            for (HexagonScreen screen : Hexagons.getInstance().getScreenManager().getScreenList()) {
+                i++;
+                if (screen.getScreenType() == ScreenType.LOADING) {
+                    continue;
+                }
+                loadedIndividual = 0;
+                currentlyLoading = screen.getScreenType().name();
+                screen.create();
+                loaded = ((float) i) / Hexagons.getInstance().getScreenManager().getScreenList().size();
+            }
+        }).start();
+
     }
 
     @Override
@@ -19,7 +54,10 @@ public class ScreenLoading extends HexagonScreen {
 
     @Override
     public void render(float delta) {
-
+        batch.begin();
+        //batch.draw(img, 0, 0);
+        font.draw(batch, "Loading " + (Math.round(loaded*100)) + "% (" + currentlyLoading + " " + (Math.round(loadedIndividual*100)) + "%)", 20, 20);
+        batch.end();
     }
 
     @Override
@@ -44,6 +82,7 @@ public class ScreenLoading extends HexagonScreen {
 
     @Override
     public void dispose() {
-
+        batch.dispose();
+        img.dispose();
     }
 }

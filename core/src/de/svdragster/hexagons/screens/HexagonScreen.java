@@ -13,4 +13,10 @@ public abstract class HexagonScreen implements Screen {
     public HexagonScreen(ScreenType screenType) {
         this.screenType = screenType;
     }
+
+    public ScreenType getScreenType() {
+        return screenType;
+    }
+
+    public abstract void create();
 }

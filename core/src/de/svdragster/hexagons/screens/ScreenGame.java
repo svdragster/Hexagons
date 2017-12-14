@@ -7,7 +7,18 @@ package de.svdragster.hexagons.screens;
 public class ScreenGame extends HexagonScreen {
 
     public ScreenGame() {
-        super(ScreenType.LOADING);
+        super(ScreenType.GAME);
+    }
+
+
+    @Override
+    public void create() {
+        int abc = 0;
+        for (int i=0; i<0xFFFFFFF; i++) {
+            abc += 10;
+            abc *= 0.25;
+            ScreenLoading.loadedIndividual = ((float) i) / 0xFFFFFFF;
+        }
     }
 
     @Override
