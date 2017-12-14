@@ -14,27 +14,30 @@ public class InputListener implements InputProcessor {
     public boolean keyDown(int keycode) {
 
         if(keycode == Input.Keys.A) {
-            Hexagons.getInstance().getCamera().moveX(-5);
+            Hexagons.getInstance().getCamera().moveX(-200);
         }
         if(keycode == Input.Keys.D) {
-            Hexagons.getInstance().getCamera().moveX(5);
+            Hexagons.getInstance().getCamera().moveX(200);
         }
         if(keycode == Input.Keys.W) {
-            Hexagons.getInstance().getCamera().moveY(5);
+            Hexagons.getInstance().getCamera().moveY(200);
         }
         if(keycode == Input.Keys.S) {
-            Hexagons.getInstance().getCamera().moveY(-5);
+            Hexagons.getInstance().getCamera().moveY(-200);
         }
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        if(keycode == Input.Keys.A
-                || keycode == Input.Keys.D
-                || keycode == Input.Keys.W
+        if(keycode == Input.Keys.W
                 || keycode == Input.Keys.S) {
-            Hexagons.getInstance().getCamera().setMoving(false);
+            Hexagons.getInstance().getCamera().setMoveY(false);
+            return true;
+        }
+        if(keycode == Input.Keys.A
+                || keycode == Input.Keys.D) {
+            Hexagons.getInstance().getCamera().setMoveX(false);
             return true;
         }
         return false;

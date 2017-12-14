@@ -30,7 +30,7 @@ public class HexagonUtil {
             x = (double) indexX * hexagon.getSideLengthX()*1.5;
             y = indexY * (hexagon.getSideLengthY()) * 2;
         }
-        return new TileLocation(x, y);
+        return new TileLocation((int) x, (int) y);
     }
 
     /**

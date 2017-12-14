@@ -2,6 +2,7 @@ package de.svdragster.hexagons.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+
 import de.svdragster.hexagons.Hexagons;
 
 public class DesktopLauncher {
@@ -9,6 +10,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1280;
 		config.height = 720;
+        config.vSyncEnabled = true;
 		new LwjglApplication(new Hexagons(), config);
 	}
 }
