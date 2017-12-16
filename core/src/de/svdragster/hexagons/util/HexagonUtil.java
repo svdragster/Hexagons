@@ -10,7 +10,7 @@ import de.svdragster.hexagons.map.TileLocation;
 
 public class HexagonUtil {
 
-    public static Hexagon hexagon = new Hexagon(90.5, 54);
+    public static Hexagon hexagon = new Hexagon(1, 0.85);//new Hexagon(90.5*0.02, 54*0.02);
 
     /**
      * get the tiles location from the array indexes
