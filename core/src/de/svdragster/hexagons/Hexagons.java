@@ -16,9 +16,12 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalShadowLight;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.graphics.g3d.utils.DepthShaderProvider;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.UBJsonReader;
 
 import java.util.ArrayList;
@@ -29,6 +32,7 @@ import java.util.Map;
 import de.svdragster.hexagons.map.TileLocation;
 import de.svdragster.hexagons.util.HexagonUtil;
 import de.svdragster.hexagons.world.Engine;
+import de.timolia.replay.plugin.ReplayApi;
 
 public class Hexagons extends ApplicationAdapter {
 
@@ -42,7 +46,6 @@ public class Hexagons extends ApplicationAdapter {
     private PerspectiveCamera camera;
     private ModelBatch modelBatch;
     private Model model;
-    //private ModelInstance modelInstance;
     private Environment environment;
 
     private CameraInputController camController;
@@ -51,11 +54,6 @@ public class Hexagons extends ApplicationAdapter {
 
     private List<TileLocation> testTiles = new ArrayList<>();
     private Map<TileLocation, ModelInstance> modelInstanceMap = new HashMap<>();
-
-	SpriteBatch batch;
-	Texture img;
-    Texture imgSelected;
-
 
 	public Hexagons() {
 		instance = this;
@@ -66,18 +64,6 @@ public class Hexagons extends ApplicationAdapter {
 
 	@Override
 	public void create() {
-		/*batch = new SpriteBatch();
-		img = new Texture("hexagon_flat.png");
-        imgSelected = new Texture("hexagon_flat_selected.png");
-
-		// test
-        for (int x=0; x<7; x++) {
-            for (int y=0; y<7; y++) {
-				TileLocation loc = HexagonUtil.getTileLocation(x, y);
-                testTiles.add(loc);
-                System.out.println(loc.toString());
-            }
-        }*/
 
         modelBatch = new ModelBatch();
         camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -93,20 +79,22 @@ public class Hexagons extends ApplicationAdapter {
         G3dModelLoader modelLoader = new G3dModelLoader(jsonReader);
         model = modelLoader.loadModel(Gdx.files.getFileHandle("hexagon.g3db", Files.FileType.Internal));
 
+        float height = 0;
         for (int x=0; x<7; x++) {
             for (int y=0; y<7; y++) {
                 ModelInstance modelInstance = new ModelInstance(model);
                 TileLocation loc = HexagonUtil.getTileLocation(x, y);
-                modelInstance.transform.translate((float) loc.getX(), 0, (float) loc.getY());
+                modelInstance.transform.translate((float) loc.getX(), height, (float) loc.getY());
+                height += 0.05;
                 modelInstance.transform.rotate(0, 1, 0, 90);
+
                 modelInstanceMap.put(loc, modelInstance);
-                System.out.println(loc.toString());
             }
         }
 
         environment = new Environment();
-        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
-        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.6f, 0.6f, 0.6f, 1f));
+        environment.add(new DirectionalLight().set(0.8f, 0.5f, 0.5f, 0f, -0.8f, -0.2f));
 
         camController = new CameraInputController(camera);
         Gdx.input.setInputProcessor(camController);
@@ -116,28 +104,23 @@ public class Hexagons extends ApplicationAdapter {
 	public void render () {
         camController.update();
 
-		/*Gdx.gl.glClearColor(1, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		// Gdx.input.getX() and Gdx.input.getY()
-        int i = 0;
-
-        Point p = HexagonUtil.getArrayLocation(new TileLocation(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY()));
-		for (TileLocation loc : this.testTiles) {
-		    if (i == p.getX() * 7 + p.getY()) {
-                batch.draw(imgSelected, (int) loc.getX(), (int) loc.getY());
-            } else {
-                batch.draw(img, (int) loc.getX(), (int) loc.getY());
-            }
-            i++;
-        }
-		batch.end();*/
-
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         modelBatch.begin(camera);
+        int i = 0;
         for (TileLocation loc : this.modelInstanceMap.keySet()) {
+            if (i == 0) {
+                ModelInstance modelInstance = this.modelInstanceMap.get(loc);
+                /*Vector3 v = modelInstance.transform.getTranslation(Vector3.Zero);
+                if (modelInstance.transform.getTranslation(Vector3.Zero).x <= 0) {
+                    modelInstance.transform.translate(20f, 0f, 0f);
+                } else {
+                    modelInstance.transform.translate(-0.1f, 0f, 0f);
+                }*/
+                i++;
+            }
             ModelInstance model = this.modelInstanceMap.get(loc);
             modelBatch.render(model, environment);
         }
@@ -146,9 +129,6 @@ public class Hexagons extends ApplicationAdapter {
 	
 	@Override
 	public void dispose () {
-		//batch.dispose();
-		//img.dispose();
-
         modelBatch.dispose();
         model.dispose();
 	}

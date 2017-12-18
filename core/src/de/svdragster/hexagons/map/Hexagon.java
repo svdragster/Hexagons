@@ -6,15 +6,6 @@ package de.svdragster.hexagons.map;
 
 public class Hexagon {
 
-    /*
-
-
-
-
-
-
-     */
-
     private double sideLengthX;
     private double sideLengthY;
 
